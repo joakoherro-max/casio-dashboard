@@ -352,32 +352,37 @@
 
   // ── CLIMA ─────────────────────────────────────────────────
   function fetchWeather() {
-    var xhr=new XMLHttpRequest();
-    xhr.open('GET','/api/weather?lat='+LAT+'&lon='+LON,true);
-    xhr.onreadystatechange=function(){
-      if(xhr.readyState!==4) return;
-      var el=document.getElementById('weather-section');
-      var c=window._colors||THEMES.green;
-      if(xhr.status===200){
-        try{
-          var d=JSON.parse(xhr.responseText),cw=d.current_weather;
-          var h=new Date().getHours();
-          var temp=Math.round(cw.temperature);
-          var sens=Math.round(d.hourly.apparent_temperature[h]!==undefined?d.hourly.apparent_temperature[h]:temp);
-          var hum=d.hourly.relativehumidity_2m[h]!==undefined?d.hourly.relativehumidity_2m[h]:'--';
-          var wind=Math.round(cw.windspeed);
-          el.innerHTML=
-            '<div class="temp-wrap">'+
-              '<div class="temp-ghost" style="color:'+c.segOff+'">88!</div>'+
-              '<div class="temp-real" style="color:'+c.segOn+';text-shadow:0 0 12px '+c.glow+'">'+temp+'<sup>°C</sup></div>'+
-            '</div>'+
-            '<div class="w-desc" style="color:'+c.segDim+'">'+(WMO[cw.weathercode]||'--')+'</div>'+
-            '<div class="w-meta" style="color:'+c.label+'">FEEL <b style="color:'+c.segOn+'">'+sens+'°</b> &nbsp; HUM <b style="color:'+c.segOn+'">'+hum+'%</b><br>WIND <b style="color:'+c.segOn+'">'+wind+' KM/H</b></div>';
-        }catch(e){el.innerHTML='<div class="msg" style="color:'+c.segDim+'">NO DATA_</div>';}
-      }else{el.innerHTML='<div class="msg" style="color:'+c.segDim+'">NO DATA_</div>';}
-    };
-    xhr.send();
-  }
+  var xhr=new XMLHttpRequest();
+  xhr.open('GET','/api/weather?lat='+LAT+'&lon='+LON,true);
+  xhr.onreadystatechange=function(){
+    if(xhr.readyState!==4) return;
+    var el=document.getElementById('weather-section');
+    var c=window._colors||THEMES.green;
+    if(xhr.status===200){
+      try{
+        var d=JSON.parse(xhr.responseText);
+        var cur=d.current;
+        var temp=Math.round(cur.temperature_2m);
+        var sens=Math.round(cur.apparent_temperature);
+        var hum=cur.relative_humidity_2m!==undefined?cur.relative_humidity_2m:'--';
+        var wind=Math.round(cur.windspeed_10m);
+        var code=cur.weathercode;
+        el.innerHTML=
+          '<div class="temp-wrap">'+
+            '<div class="temp-ghost" style="color:'+c.segOff+'">88!</div>'+
+            '<div class="temp-real" style="color:'+c.segOn+';text-shadow:0 0 12px '+c.glow+'">'+temp+'<sup>°C</sup></div>'+
+          '</div>'+
+          '<div class="w-desc" style="color:'+c.segDim+'">'+(WMO[code]||'--')+'</div>'+
+          '<div class="w-meta" style="color:'+c.label+'">FEEL <b style="color:'+c.segOn+'">'+sens+'°</b> &nbsp; HUM <b style="color:'+c.segOn+'">'+hum+'%</b><br>WIND <b style="color:'+c.segOn+'">'+wind+' KM/H</b></div>';
+      }catch(e){
+        el.innerHTML='<div class="msg" style="color:'+c.segDim+'">ERR_</div>';
+      }
+    }else{
+      el.innerHTML='<div class="msg" style="color:'+c.segDim+'">NO DATA_</div>';
+    }
+  };
+  xhr.send();
+}
 
   // ── AGENDA ────────────────────────────────────────────────
   var todayISO='';
