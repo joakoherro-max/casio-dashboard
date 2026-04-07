@@ -3,8 +3,8 @@ module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 'no-store');
 
-  var lat = req.query.lat || '-34.6037';
-  var lon = req.query.lon || '-58.3816';
+  var lat = req.query.lat || '-36.8938';
+  var lon = req.query.lon || '-60.3232';
 
   var url = 'https://api.open-meteo.com/v1/forecast' +
     '?latitude=' + lat +
