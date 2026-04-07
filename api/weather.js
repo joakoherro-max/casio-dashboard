@@ -9,8 +9,7 @@ module.exports = async function handler(req, res) {
   var url = 'https://api.open-meteo.com/v1/forecast' +
     '?latitude=' + lat +
     '&longitude=' + lon +
-    '&current_weather=true' +
-    '&hourly=apparent_temperature,relativehumidity_2m' +
+    '&current=temperature_2m,apparent_temperature,relative_humidity_2m,windspeed_10m,weathercode' +
     '&timezone=America%2FArgentina%2FBuenos_Aires' +
     '&forecast_days=1';
 
